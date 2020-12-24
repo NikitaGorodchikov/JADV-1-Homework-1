@@ -16,10 +16,10 @@ public class MyCallable implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         for (int i = 1; i <= num; i++) {
-            System.out.println("Сообщение номер " + i + " потока с именем " + name);
+            System.out.println("Сообщение номер " + i + " задачи с именем " + name);
             Thread.sleep(2500);
         }
-        System.out.println("Поток " + name + " вывел все свои сообщения!");
+        System.out.println("Задача " + name + " вывела все свои сообщения!");
         return num;
     }
 }

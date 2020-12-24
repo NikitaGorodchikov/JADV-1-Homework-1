@@ -1,14 +1,12 @@
 import java.util.Random;
-import java.util.concurrent.ForkJoinPool;
 
 public class Main {
     public static void main(String[] args) {
-        int[] arr = new int[9999999];
+        int[] arr = new int[100000];
         randomArray(arr);
 
         System.out.println("Результат мейна: " + sumArray(arr) + ". Время: " + System.currentTimeMillis());
-        new ForkJoinPool().invoke(new SumOfArray(arr));
-        // Поток в любом случае работает чуть дольше
+        System.out.println("Результат задачи: " + SumOfArray.sumArray(arr) + ". Время: " + System.currentTimeMillis());
     }
 
     public static void randomArray(int[] array) {

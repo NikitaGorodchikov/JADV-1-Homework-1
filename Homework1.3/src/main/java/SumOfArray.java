@@ -1,20 +1,37 @@
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
 public class SumOfArray extends RecursiveTask<Integer> {
-    int[] arr;
+    static final int SEQUENTIAL_THRESHOLD = 5000;
 
-    public SumOfArray(int[] arr) {
-        this.arr = arr;
+    int low;
+    int high;
+    int[] array;
+
+    SumOfArray(int[] arr, int low, int high) {
+        this.array = arr;
+        this.low = low;
+        this.high = high;
     }
 
-
-    @Override
     protected Integer compute() {
-        int sum = 0;
-        for (int j : arr) {
-            sum = sum + j;
+        if (high - low <= SEQUENTIAL_THRESHOLD) {
+            int sum = 0;
+            for (int i = low; i < high; ++i)
+                sum += array[i];
+            return sum;
+        } else {
+            int mid = low + (high - low) / 2;
+            SumOfArray left = new SumOfArray(array, low, mid);
+            SumOfArray right = new SumOfArray(array, mid, high);
+            left.fork();
+            int rightAns = right.compute();
+            int leftAns = left.join();
+            return leftAns + rightAns;
         }
-        System.out.println("Результат потока: " + sum + ". Время: " + System.currentTimeMillis());
-        return sum;
+    }
+
+    static int sumArray(int[] array) {
+        return ForkJoinPool.commonPool().invoke(new SumOfArray(array, 0, array.length));
     }
 }
